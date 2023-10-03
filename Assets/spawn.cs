@@ -5,22 +5,32 @@ using UnityEngine;
 public class spawn : MonoBehaviour
 {
     public GameObject card;
-    public int xpos;
+    int xpos;
+    bool[] taken = {false, false, false};
+
     // Start is called before the first frame update
     void Start()
     {
-        xpos = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space)) {
-            Debug.Log("hi");
-            Vector2 myvec = new Vector2(xpos, 0);
-            GameObject game_card = Instantiate(card);
-            game_card.transform.position = myvec;
-            xpos += 2;
+            for(int i = 0; i < 3; i++) {
+                if(taken[i]) continue;
+                Vector2 myvec = new Vector2(-4+4*i, 0);
+                GameObject game_card = Instantiate(card);
+                game_card.SendMessage("tellMeNum", i);
+                game_card.transform.position = myvec;
+                taken[i] = true;
+                break;
+            }
         }
+    }
+
+    public void receive(int loc) {
+        Debug.Log("message came");
+        taken[loc] = false;
     }
 }
